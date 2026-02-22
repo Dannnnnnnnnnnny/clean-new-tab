@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Clean New Tab",
+  "version": "1.0.0",
+  "description": "A minimal, clean new tab page with top sites, history, bookmarks, and search",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [
+    "history",
+    "bookmarks",
+    "topSites",
+    "storage"
+  ]
+}

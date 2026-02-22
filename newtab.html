@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#141218" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#FFFBFE" media="(prefers-color-scheme: light)">
+  <title>New Tab</title>
+  <style>
+    /* CRITICAL INLINE CSS - renders before external CSS loads */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #141218;
+      font-family: 'Google Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    @media (prefers-color-scheme: light) {
+      html, body { background: #FFFBFE; }
+    }
+    [data-theme="light"], [data-theme="light"] body { background: #FFFBFE; }
+    [data-theme="dark"], [data-theme="dark"] body { background: #141218; }
+  </style>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Background Layer for Gradients -->
+  <div id="background-layer" class="background-layer"></div>
+
+  <div class="container">
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="search-container" id="search-container">
+        <div class="search-wrapper">
+          <div class="search-input-row">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="M21 21l-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="search-input" class="search-input" placeholder="Search the web..." autofocus>
+            <span class="search-keybind" id="search-keybind"><kbd>Tab</kbd></span>
+            <button class="search-close" id="search-close" aria-label="Close">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="quick-links">
+            <a href="https://youtube.com" class="quick-link">
+              <div class="quick-link-icon" style="background: #FF0000;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2c-.3-1-1-1.8-2-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.5.6c-1 .3-1.7 1.1-2 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8c.3 1 1 1.8 2 2.1 1.9.6 9.5.6 9.5.6s7.6 0 9.5-.6c1-.3 1.7-1.1 2-2.1.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.5 15.5v-7l6.4 3.5-6.4 3.5z"/></svg>
+              </div>
+              <span>YouTube</span>
+            </a>
+            <a href="https://x.com" class="quick-link">
+              <div class="quick-link-icon" style="background: #000000;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </div>
+              <span>X</span>
+            </a>
+            <a href="https://instagram.com" class="quick-link">
+              <div class="quick-link-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1.1.4 2.2.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1.1.4-2.2.4-1.3.1-1.6.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1.1-.4-2.2-.1-1.3-.1-1.6-.1-4.9s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1.1-.4 2.2-.4 1.3-.1 1.6-.1 4.9-.1M12 0C8.7 0 8.3 0 7 .1 5.7.1 4.7.3 3.8.6c-.9.3-1.6.8-2.4 1.5C.8 2.9.3 3.6 0 4.5.3 5.4.1 6.4.1 7.7.1 9 0 9.3 0 12.6s0 3.6.1 4.9c0 1.3.2 2.3.5 3.2.3.9.8 1.6 1.5 2.4.7.7 1.5 1.2 2.4 1.5.9.3 1.9.5 3.2.5 1.3.1 1.6.1 4.9.1s3.6 0 4.9-.1c1.3-.1 2.3-.2 3.2-.5.9-.3 1.6-.8 2.4-1.5.7-.7 1.2-1.5 1.5-2.4.3-.9.5-1.9.5-3.2.1-1.3.1-1.6.1-4.9s0-3.6-.1-4.9c-.1-1.3-.2-2.3-.5-3.2-.3-.9-.8-1.6-1.5-2.4C21.1.8 20.4.3 19.5 0c-.9-.3-1.9-.5-3.2-.5C15 0 14.6 0 12 0zm0 5.8c-3.4 0-6.2 2.8-6.2 6.2s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2-2.8-6.2-6.2-6.2zm0 10.2c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg>
+              </div>
+              <span>Instagram</span>
+            </a>
+            <a href="https://github.com" class="quick-link">
+              <div class="quick-link-icon" style="background: #24292e;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.6 21.8 24 17.3 24 12c0-6.6-5.4-12-12-12z"/></svg>
+              </div>
+              <span>GitHub</span>
+            </a>
+            <a href="https://reddit.com" class="quick-link">
+              <div class="quick-link-icon" style="background: #FF4500;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+              </div>
+              <span>Reddit</span>
+            </a>
+            <a href="https://linkedin.com" class="quick-link">
+              <div class="quick-link-icon" style="background: #0A66C2;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+              </div>
+              <span>LinkedIn</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="search-backdrop" id="search-backdrop"></div>
+    </section>
+
+    <!-- Top Sites Grid -->
+    <section class="top-sites-section">
+      <div id="top-sites" class="top-sites-grid"></div>
+    </section>
+
+    <!-- YouTube Videos Section -->
+    <section id="youtube-section" class="youtube-section">
+      <div class="panel-header">
+        <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+          <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+        </svg>
+        <h2 class="panel-title">Recently Watched</h2>
+      </div>
+      <div id="youtube-grid" class="youtube-grid"></div>
+    </section>
+
+    <!-- Main Content: History & Bookmarks -->
+    <section class="main-content">
+      <div class="panel history-panel">
+        <div class="panel-header">
+          <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <h2 class="panel-title">Recent</h2>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </div>
+      <div class="panel bookmarks-panel">
+        <div class="panel-header">
+          <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <h2 class="panel-title">Bookmarks</h2>
+        </div>
+        <div id="bookmarks-list" class="bookmarks-list"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Settings Button -->
+  <div class="settings-btn-container">
+    <button id="settings-btn" class="settings-btn" aria-label="Settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg>
+    </button>
+  </div>
+
+  <!-- Settings Drawer -->
+  <div id="settings-overlay" class="settings-drawer hidden">
+    <div class="settings-backdrop"></div>
+    <aside class="settings-panel">
+      <!-- Header -->
+      <header class="settings-header">
+        <h2>Settings</h2>
+        <button id="close-settings" class="settings-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Content -->
+      <div class="settings-content">
+        <!-- Theme Section -->
+        <section class="settings-section">
+          <h3 class="settings-section-title">Theme</h3>
+          <div class="theme-switcher">
+            <button class="theme-option" data-theme="light" aria-label="Light theme">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+              </svg>
+              <span>Light</span>
+            </button>
+            <button class="theme-option" data-theme="dark" aria-label="Dark theme">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+              <span>Dark</span>
+            </button>
+            <button class="theme-option" data-theme="system" aria-label="System theme">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <path d="M8 21h8M12 17v4"/>
+              </svg>
+              <span>Auto</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Accent Color -->
+        <section class="settings-section">
+          <h3 class="settings-section-title">Accent</h3>
+          <div class="accent-colors">
+            <button class="accent-swatch active" data-color="#8B5CF6" style="--swatch: #8B5CF6" aria-label="Purple"></button>
+            <button class="accent-swatch" data-color="#3B82F6" style="--swatch: #3B82F6" aria-label="Blue"></button>
+            <button class="accent-swatch" data-color="#14B8A6" style="--swatch: #14B8A6" aria-label="Teal"></button>
+            <button class="accent-swatch" data-color="#EC4899" style="--swatch: #EC4899" aria-label="Pink"></button>
+            <button class="accent-swatch" data-color="#F97316" style="--swatch: #F97316" aria-label="Orange"></button>
+            <button class="accent-swatch" data-color="#10B981" style="--swatch: #10B981" aria-label="Green"></button>
+          </div>
+        </section>
+
+        <!-- Search -->
+        <section class="settings-section">
+          <h3 class="settings-section-title">Search</h3>
+          <select id="search-engine" class="settings-select">
+            <option value="google">Google</option>
+            <option value="duckduckgo">DuckDuckGo</option>
+            <option value="bing">Bing</option>
+          </select>
+        </section>
+
+        <!-- Sections -->
+        <section class="settings-section">
+          <h3 class="settings-section-title">Sections</h3>
+          <div class="section-controls">
+            <!-- Top Sites -->
+            <div class="section-row">
+              <label class="section-toggle">
+                <input type="checkbox" id="show-top-sites" checked>
+                <span class="toggle-track"></span>
+                <span class="toggle-label">Top Sites</span>
+              </label>
+              <select id="top-sites-count" class="count-select">
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8" selected>8</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+            <!-- History -->
+            <div class="section-row">
+              <label class="section-toggle">
+                <input type="checkbox" id="show-history" checked>
+                <span class="toggle-track"></span>
+                <span class="toggle-label">History</span>
+              </label>
+              <select id="history-count" class="count-select">
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+              </select>
+            </div>
+            <!-- Bookmarks -->
+            <div class="section-row">
+              <label class="section-toggle">
+                <input type="checkbox" id="show-bookmarks" checked>
+                <span class="toggle-track"></span>
+                <span class="toggle-label">Bookmarks</span>
+              </label>
+            </div>
+            <!-- YouTube -->
+            <div class="section-row">
+              <label class="section-toggle">
+                <input type="checkbox" id="show-youtube" checked>
+                <span class="toggle-track"></span>
+                <span class="toggle-label">YouTube</span>
+              </label>
+              <select id="youtube-count" class="count-select">
+                <option value="3">3</option>
+                <option value="6" selected>6</option>
+                <option value="9">9</option>
+                <option value="12">12</option>
+              </select>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Background -->
+        <section class="settings-section">
+          <h3 class="settings-section-title">Background</h3>
+
+          <!-- Background Type Tabs -->
+          <div class="bg-type-tabs">
+            <button class="bg-type-tab active" data-bgtype="none">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M4.93 4.93l14.14 14.14"/>
+              </svg>
+              <span>None</span>
+            </button>
+            <button class="bg-type-tab" data-bgtype="color">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <rect x="3" y="3" width="18" height="18" rx="3"/>
+              </svg>
+              <span>Color</span>
+            </button>
+            <button class="bg-type-tab" data-bgtype="gradient">
+              <svg viewBox="0 0 24 24" fill="none">
+                <defs><linearGradient id="grad-icon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#8B5CF6"/><stop offset="100%" style="stop-color:#3B82F6"/></linearGradient></defs>
+                <rect x="3" y="3" width="18" height="18" rx="3" fill="url(#grad-icon)"/>
+              </svg>
+              <span>Gradient</span>
+            </button>
+            <button class="bg-type-tab" data-bgtype="slideshow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+              <span>Images</span>
+            </button>
+            <button class="bg-type-tab" data-bgtype="particles">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="5" cy="5" r="2"/><circle cx="19" cy="8" r="1.5"/><circle cx="12" cy="12" r="2.5"/><circle cx="6" cy="18" r="1.5"/><circle cx="17" cy="17" r="2"/>
+              </svg>
+              <span>Particles</span>
+            </button>
+          </div>
+
+          <!-- Background Options Panels -->
+          <div class="bg-options-container">
+
+            <!-- None Panel (empty) -->
+            <div id="bg-none-panel" class="bg-panel active"></div>
+
+            <!-- Color Panel -->
+            <div id="bg-color-panel" class="bg-panel">
+              <div class="color-presets">
+                <button class="color-preset" data-color="#FFFFFF" style="background: #FFFFFF" aria-label="White"></button>
+                <button class="color-preset" data-color="#F5F5F5" style="background: #F5F5F5" aria-label="Light Gray"></button>
+                <button class="color-preset" data-color="#1a1a2e" style="background: #1a1a2e" aria-label="Dark Blue"></button>
+                <button class="color-preset" data-color="#0f0f0f" style="background: #0f0f0f" aria-label="Near Black"></button>
+                <button class="color-preset" data-color="#1e3a5f" style="background: #1e3a5f" aria-label="Navy"></button>
+                <button class="color-preset" data-color="#2d3436" style="background: #2d3436" aria-label="Charcoal"></button>
+                <button class="color-preset" data-color="#f8f4e8" style="background: #f8f4e8" aria-label="Cream"></button>
+                <button class="color-preset" data-color="#e8f4f8" style="background: #e8f4f8" aria-label="Ice"></button>
+              </div>
+              <div class="custom-color-row">
+                <span class="option-label">Custom</span>
+                <input type="color" id="custom-bg-color" class="color-picker-input" value="#1a1a2e">
+              </div>
+            </div>
+
+            <!-- Gradient Panel -->
+            <div id="bg-gradient-panel" class="bg-panel">
+              <div class="preset-grid">
+                <button class="gradient-preset active" data-preset="aurora" style="background: linear-gradient(135deg, #00d4ff, #090979, #020024)"></button>
+                <button class="gradient-preset" data-preset="sunset" style="background: linear-gradient(135deg, #ff6b6b, #feca57, #ff9ff3)"></button>
+                <button class="gradient-preset" data-preset="ocean" style="background: linear-gradient(135deg, #0077b6, #00b4d8, #90e0ef)"></button>
+                <button class="gradient-preset" data-preset="neon" style="background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00)"></button>
+                <button class="gradient-preset" data-preset="forest" style="background: linear-gradient(135deg, #2d5016, #4a7c23, #228b22)"></button>
+                <button class="gradient-preset" data-preset="midnight" style="background: linear-gradient(135deg, #0c1445, #1a1a2e, #0f3460)"></button>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Custom colors</span>
+                <div class="color-pickers">
+                  <input type="color" class="color-picker-input" data-index="0" value="#ee7752">
+                  <input type="color" class="color-picker-input" data-index="1" value="#e73c7e">
+                  <input type="color" class="color-picker-input" data-index="2" value="#23a6d5">
+                  <input type="color" class="color-picker-input" data-index="3" value="#23d5ab">
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Style</span>
+                <div class="pill-group">
+                  <button class="pill active" data-type="linear">Linear</button>
+                  <button class="pill" data-type="radial">Radial</button>
+                  <button class="pill" data-type="conic">Conic</button>
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Animation</span>
+                <div class="pill-group">
+                  <button class="pill active" data-style="shift">Shift</button>
+                  <button class="pill" data-style="pulse">Pulse</button>
+                  <button class="pill" data-style="wave">Wave</button>
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Speed</span>
+                <input type="range" id="gradient-speed" class="settings-range" min="5" max="60" value="15">
+              </div>
+            </div>
+
+            <!-- Slideshow Panel -->
+            <div id="bg-slideshow-panel" class="bg-panel">
+              <div class="upload-area" id="slideshow-gallery">
+                <label class="upload-btn" id="upload-zone">
+                  <input type="file" id="image-upload" accept="image/*" multiple hidden>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  <span>Add images</span>
+                </label>
+              </div>
+              <div class="url-row">
+                <input type="url" id="image-url-input" class="settings-input" placeholder="Paste image URL...">
+                <button id="add-url-btn" class="add-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                </button>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Transition</span>
+                <div class="pill-group" id="css-transitions">
+                  <button class="pill active" data-transition="fade">Fade</button>
+                  <button class="pill" data-transition="slide">Slide</button>
+                  <button class="pill" data-transition="zoom">Zoom</button>
+                  <button class="pill" data-transition="blur">Blur</button>
+                </div>
+              </div>
+              <div class="webgl-section" id="webgl-transitions">
+                <span class="option-label">WebGL effects</span>
+                <div class="webgl-grid">
+                  <button class="webgl-chip" data-webgl="dissolve">Dissolve</button>
+                  <button class="webgl-chip" data-webgl="pixelate">Pixelate</button>
+                  <button class="webgl-chip" data-webgl="ripple">Ripple</button>
+                  <button class="webgl-chip" data-webgl="glitch">Glitch</button>
+                  <button class="webgl-chip" data-webgl="wipe">Wipe</button>
+                  <button class="webgl-chip" data-webgl="morph">Morph</button>
+                  <button class="webgl-chip" data-webgl="swirl">Swirl</button>
+                  <button class="webgl-chip" data-webgl="burn">Burn</button>
+                </div>
+              </div>
+              <div class="transition-preview" id="transition-preview">
+                <canvas id="preview-canvas"></canvas>
+                <div class="preview-controls">
+                  <span id="preview-transition-name">Select effect</span>
+                  <button class="preview-play" id="preview-play-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Filter</span>
+                <div class="pill-group">
+                  <button class="pill active" data-filter="none">None</button>
+                  <button class="pill" data-filter="blur">Blur</button>
+                  <button class="pill" data-filter="darken">Darken</button>
+                </div>
+              </div>
+              <div class="toggle-row-compact">
+                <label class="inline-toggle">
+                  <input type="checkbox" id="ken-burns-toggle">
+                  <span class="toggle-track-sm"></span>
+                  <span>Ken Burns</span>
+                </label>
+                <label class="inline-toggle">
+                  <input type="checkbox" id="shuffle-toggle">
+                  <span class="toggle-track-sm"></span>
+                  <span>Shuffle</span>
+                </label>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Interval <span class="range-value" data-for="slideshow-speed">8s</span></span>
+                <input type="range" id="slideshow-speed" class="settings-range" min="3" max="30" value="8">
+              </div>
+              <div class="option-group">
+                <span class="option-label">Crossfade <span class="range-value" data-for="crossfade-duration">1.5s</span></span>
+                <input type="range" id="crossfade-duration" class="settings-range" min="500" max="3000" value="1500" step="100">
+              </div>
+            </div>
+
+            <!-- Particles Panel -->
+            <div id="bg-particles-panel" class="bg-panel">
+              <div class="option-group">
+                <span class="option-label">Style</span>
+                <div class="pill-group">
+                  <button class="pill active" data-style="dots">Dots</button>
+                  <button class="pill" data-style="lines">Lines</button>
+                  <button class="pill" data-style="network">Network</button>
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Shape</span>
+                <div class="shape-buttons">
+                  <button class="shape-btn selected" data-shape="dots" aria-label="Circles">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+                  </button>
+                  <button class="shape-btn" data-shape="stars" aria-label="Stars">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 4.8 5.3.8-3.8 3.7.9 5.2L12 14l-4.8 2.5.9-5.2-3.8-3.7 5.3-.8z"/></svg>
+                  </button>
+                  <button class="shape-btn" data-shape="squares" aria-label="Squares">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+                  </button>
+                  <button class="shape-btn" data-shape="triangles" aria-label="Triangles">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4L3 20h18z"/></svg>
+                  </button>
+                  <button class="shape-btn" data-shape="hearts" aria-label="Hearts">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-6-8-11.5c0-3 2.5-5.5 5.5-5.5 1.7 0 3.4 1 4.5 2.5 1.1-1.5 2.8-2.5 4.5-2.5 3 0 5.5 2.5 5.5 5.5 0 5.5-8 11.5-8 11.5z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Colors</span>
+                <div class="color-pickers">
+                  <input type="color" class="color-picker-input particle-color" data-index="0" value="#8B5CF6">
+                  <input type="color" class="color-picker-input particle-color" data-index="1" value="#3B82F6">
+                  <input type="color" class="color-picker-input particle-color" data-index="2" value="#10B981">
+                </div>
+              </div>
+              <div class="option-group">
+                <span class="option-label">Interaction</span>
+                <div class="pill-group">
+                  <button class="pill active" data-interaction="none">None</button>
+                  <button class="pill" data-interaction="attract">Attract</button>
+                  <button class="pill" data-interaction="repel">Repel</button>
+                </div>
+              </div>
+              <div class="slider-group">
+                <div class="slider-row">
+                  <span>Density</span>
+                  <input type="range" id="particle-density" class="settings-range" min="10" max="100" value="40">
+                </div>
+                <div class="slider-row">
+                  <span>Speed</span>
+                  <input type="range" id="particle-speed" class="settings-range" min="1" max="10" value="3">
+                </div>
+                <div class="slider-row">
+                  <span>Opacity</span>
+                  <input type="range" id="particle-opacity" class="settings-range" min="10" max="80" value="30">
+                </div>
+                <div class="slider-row">
+                  <span>Size</span>
+                  <input type="range" id="particle-scale" class="settings-range" min="50" max="300" value="100">
+                </div>
+              </div>
+            </div>
+
+          </div><!-- .bg-options-container -->
+        </section>
+
+      </div>
+    </aside>
+  </div>
+
+  <!-- Onboarding Tip -->
+  <div id="onboarding" class="onboarding hidden">
+    <div class="onboarding-card">
+      <div class="onboarding-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 16v-4M12 8h.01"></path>
+        </svg>
+      </div>
+      <div class="onboarding-content">
+        <div class="onboarding-title">Hide the browser footer</div>
+        <div class="onboarding-text">Right-click the bar below and select <strong>"Hide footer on New Tab page"</strong> for a cleaner look.</div>
+      </div>
+      <button id="onboarding-dismiss" class="onboarding-dismiss">Got it</button>
+    </div>
+    <div class="onboarding-arrow"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils/favicon.js"></script>
+  <script src="js/api/storage.js"></script>
+  <script src="js/api/topSites.js"></script>
+  <script src="js/api/history.js"></script>
+  <script src="js/api/bookmarks.js"></script>
+  <script src="js/api/youtube.js"></script>
+  <script src="js/components/search.js"></script>
+  <script src="js/components/topSites.js"></script>
+  <script src="js/components/history.js"></script>
+  <script src="js/components/bookmarks.js"></script>
+  <script src="js/components/youtube.js"></script>
+  <script src="js/components/settings.js"></script>
+  <script src="js/components/webglTransitions.js"></script>
+  <script src="js/components/animatedBackground.js"></script>
+  <script src="js/components/onboarding.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
