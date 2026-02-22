@@ -61,9 +61,11 @@ const YouTubeComponent = {
         <div class="youtube-thumbnail">
           <img src="${video.thumbnail}" alt="" loading="lazy" />
           <div class="youtube-play">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
+            <div class="youtube-play-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18a1 1 0 0 0 0-1.69L9.54 5.98A.998.998 0 0 0 8 6.82"/>
+              </svg>
+            </div>
           </div>
           ${shortBadge}
         </div>
