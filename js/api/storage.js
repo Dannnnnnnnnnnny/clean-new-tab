@@ -21,20 +21,13 @@ const Storage = {
       animatedBgConfig: {
         type: 'gradient',
         gradient: {
-          preset: null,
-          colors: ['#ee7752', '#e73c7e', '#23a6d5', '#23d5ab', '#667eea', '#764ba2'],
-          gradientType: 'linear',
-          animationStyle: 'shift',
-          direction: '-45deg',
-          speed: 15
+          preset: 'aurora',
+          colors: ['#00d4ff', '#7c3aed', '#0ea5e9']
         },
         slideshow: {
           speed: 8,
           crossfade: 1500,
           transition: 'fade',
-          webglTransition: null,
-          kenBurns: false,
-          filter: 'none',
           shuffle: false
         },
         particles: {

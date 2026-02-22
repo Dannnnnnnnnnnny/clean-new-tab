@@ -7,7 +7,6 @@ const AnimatedBackgroundComponent = {
   currentType: 'none', // 'none', 'color', 'gradient', 'slideshow', 'particles'
   config: null,
   eventsBound: false,
-  previewInitialized: false,
 
   // Animation frames
   particleAnimationId: null,
@@ -23,21 +22,19 @@ const AnimatedBackgroundComponent = {
   currentSlideIndex: 0,
   slideshowImages: [],
   shuffledOrder: [],
-  webglTextures: [],
-  useWebGL: false,
 
   // DOM references
   customizer: null,
   bgLayer: null,
 
-  // Gradient presets
+  // Gradient presets — curated mesh gradient palettes
   gradientPresets: {
-    aurora: ['#00d4ff', '#090979', '#020024', '#00d4ff', '#00d4ff', '#090979'],
-    sunset: ['#ff6b6b', '#feca57', '#ff9ff3', '#54a0ff', '#ff6b6b', '#feca57'],
-    ocean: ['#0077b6', '#00b4d8', '#90e0ef', '#caf0f8', '#0077b6', '#00b4d8'],
-    neon: ['#ff00ff', '#00ffff', '#ff00ff', '#ffff00', '#00ffff', '#ff00ff'],
-    forest: ['#2d5016', '#4a7c23', '#6b8e23', '#228b22', '#2d5016', '#4a7c23'],
-    midnight: ['#0c1445', '#1a1a2e', '#16213e', '#0f3460', '#0c1445', '#1a1a2e']
+    aurora:   { base: '#080b1a', colors: ['#00d4ff', '#7c3aed', '#0ea5e9'] },
+    sunset:   { base: '#1a0c0a', colors: ['#f43f5e', '#f59e0b', '#ec4899'] },
+    ocean:    { base: '#080d14', colors: ['#0077b6', '#00b4d8', '#38bdf8'] },
+    neon:     { base: '#0f0a1a', colors: ['#8b5cf6', '#ec4899', '#6366f1'] },
+    forest:   { base: '#081410', colors: ['#10b981', '#059669', '#14b8a6'] },
+    midnight: { base: '#08081a', colors: ['#3b82f6', '#1d4ed8', '#6366f1'] }
   },
 
   /**
@@ -49,11 +46,6 @@ const AnimatedBackgroundComponent = {
     const appearance = settings.appearance || {};
     this.config = appearance.animatedBgConfig || this.getDefaultConfig();
     this.currentType = this.config.type || 'none';
-
-    // Check WebGL support and add class to body
-    if (WebGLTransitions.isSupported()) {
-      document.body.classList.add('webgl-supported');
-    }
 
     // Load slideshow images from local storage
     await this.loadImages();
@@ -81,20 +73,13 @@ const AnimatedBackgroundComponent = {
         value: '#1a1a2e'
       },
       gradient: {
-        preset: null,
-        colors: ['#ee7752', '#e73c7e', '#23a6d5', '#23d5ab', '#667eea', '#764ba2'],
-        gradientType: 'linear',
-        animationStyle: 'shift',
-        direction: '-45deg',
-        speed: 15
+        preset: 'aurora',
+        colors: ['#00d4ff', '#7c3aed', '#0ea5e9']
       },
       slideshow: {
         speed: 8,
         crossfade: 1500,
         transition: 'fade',
-        webglTransition: null,
-        kenBurns: false,
-        filter: 'none',
         shuffle: false
       },
       particles: {
@@ -194,45 +179,23 @@ const AnimatedBackgroundComponent = {
         this.updateGradient();
       });
     });
-
-    // Gradient type pills
-    document.querySelectorAll('#bg-gradient-panel .pill[data-type]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.closest('.pill-group').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.updateGradient();
-      });
-    });
-
-    // Animation style pills
-    document.querySelectorAll('#bg-gradient-panel .pill[data-style]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.closest('.pill-group').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.updateGradient();
-      });
-    });
-
-    // Speed slider
-    const speedSlider = document.getElementById('gradient-speed');
-    speedSlider?.addEventListener('input', () => this.updateGradient());
   },
 
   /**
    * Handle preset change
    */
   handlePresetChange(preset) {
-    if (!this.gradientPresets[preset]) return;
+    const presetData = this.gradientPresets[preset];
+    if (!presetData) return;
 
     // Update UI
     document.querySelectorAll('.gradient-preset').forEach(c => {
       c.classList.toggle('active', c.dataset.preset === preset);
     });
 
-    // Apply preset colors
-    const colors = this.gradientPresets[preset];
+    // Apply preset colors to pickers
     document.querySelectorAll('#bg-gradient-panel .color-pickers .color-picker-input').forEach((picker, i) => {
-      if (colors[i]) picker.value = colors[i];
+      if (presetData.colors[i]) picker.value = presetData.colors[i];
     });
 
     this.config.gradient.preset = preset;
@@ -271,58 +234,14 @@ const AnimatedBackgroundComponent = {
       if (e.key === 'Enter') this.handleAddImageUrl();
     });
 
-    // CSS Transition pills
+    // Transition pills
     document.querySelectorAll('#bg-slideshow-panel .pill[data-transition]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Deselect all CSS transitions and WebGL transitions
-        document.querySelectorAll('#bg-slideshow-panel .pill[data-transition]').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('#bg-slideshow-panel .webgl-chip').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.useWebGL = false;
-        this.updateSlideshow();
-      });
-    });
-
-    // WebGL Transition buttons
-    document.querySelectorAll('#bg-slideshow-panel .webgl-chip').forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Deselect all CSS transitions and WebGL transitions
-        document.querySelectorAll('#bg-slideshow-panel .pill[data-transition]').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('#bg-slideshow-panel .webgl-chip').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.useWebGL = true;
-
-        // Play preview
-        const transitionType = btn.dataset.webgl;
-        this.playTransitionPreview(transitionType);
-
-        // Update label
-        const label = document.getElementById('preview-transition-name');
-        if (label) label.textContent = transitionType;
-
-        this.updateSlideshow();
-      });
-    });
-
-    // Preview replay button
-    document.getElementById('preview-play-btn')?.addEventListener('click', () => {
-      if (WebGLTransitions.preview.currentType) {
-        WebGLTransitions.preview.replay();
-      }
-    });
-
-    // Filter pills
-    document.querySelectorAll('#bg-slideshow-panel .pill[data-filter]').forEach(btn => {
       btn.addEventListener('click', () => {
         btn.closest('.pill-group').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         this.updateSlideshow();
       });
     });
-
-    // Ken Burns toggle
-    const kenBurnsToggle = document.getElementById('ken-burns-toggle');
-    kenBurnsToggle?.addEventListener('change', () => this.updateSlideshow());
 
     // Shuffle toggle
     const shuffleToggle = document.getElementById('shuffle-toggle');
@@ -354,48 +273,6 @@ const AnimatedBackgroundComponent = {
       } else {
         valueEl.textContent = slider.value + 's';
       }
-    }
-  },
-
-  /**
-   * Initialize transition preview
-   */
-  initTransitionPreview() {
-    if (!this.previewInitialized && WebGLTransitions.isSupported()) {
-      // Small delay to ensure canvas is rendered
-      setTimeout(async () => {
-        if (WebGLTransitions.preview.init()) {
-          this.previewInitialized = true;
-          // Load user images if available
-          await this.updatePreviewImages();
-        }
-      }, 100);
-    }
-  },
-
-  /**
-   * Update preview with user's slideshow images
-   */
-  async updatePreviewImages() {
-    if (this.slideshowImages.length >= 2) {
-      await WebGLTransitions.preview.loadUserImages(this.slideshowImages);
-      // Refresh the idle display to show user image
-      WebGLTransitions.preview.showIdle();
-    }
-  },
-
-  /**
-   * Play transition preview
-   */
-  playTransitionPreview(transitionType) {
-    if (!this.previewInitialized) {
-      this.initTransitionPreview();
-      // Wait for init then play
-      setTimeout(() => {
-        WebGLTransitions.preview.play(transitionType);
-      }, 200);
-    } else {
-      WebGLTransitions.preview.play(transitionType);
     }
   },
 
@@ -485,11 +362,6 @@ const AnimatedBackgroundComponent = {
 
     // Update UI
     this.updatePanelVisibility();
-
-    // Initialize preview when switching to slideshow
-    if (type === 'slideshow') {
-      this.initTransitionPreview();
-    }
 
     // Apply background
     this.applyBackground();
@@ -582,41 +454,59 @@ const AnimatedBackgroundComponent = {
     if (!this.bgLayer) return;
 
     const colors = this.getGradientColors();
-    const gradientType = document.querySelector('#bg-gradient-panel .pill[data-type].active')?.dataset.type || 'linear';
-    const animStyle = document.querySelector('#bg-gradient-panel .pill[data-style].active')?.dataset.style || 'shift';
-    const direction = '-45deg'; // Fixed direction since we removed direction buttons
-    const speed = document.getElementById('gradient-speed')?.value || 15;
+    const preset = this.config.gradient?.preset;
+    const base = preset && this.gradientPresets[preset]
+      ? this.gradientPresets[preset].base
+      : this.deriveBaseColor(colors);
 
     document.body.classList.add('has-bg-gradient');
+    this.bgLayer.style.background = this.buildMeshGradient(colors, base);
+  },
 
-    // Build gradient based on type
-    let gradient;
-    switch (gradientType) {
-      case 'radial':
-        gradient = `radial-gradient(circle, ${colors.join(', ')})`;
-        break;
-      case 'conic':
-        gradient = `conic-gradient(from 0deg, ${colors.join(', ')})`;
-        break;
-      default:
-        gradient = `linear-gradient(${direction}, ${colors.join(', ')})`;
-    }
+  /**
+   * Build a layered mesh gradient from colors and a base
+   */
+  buildMeshGradient(colors, base) {
+    const c = colors.map(hex => this.hexToRgba(hex));
+    return [
+      `radial-gradient(ellipse at 15% 85%, rgba(${c[0]},0.45) 0%, transparent 70%)`,
+      `radial-gradient(ellipse at 85% 15%, rgba(${c[1]},0.4) 0%, transparent 65%)`,
+      `radial-gradient(ellipse at 50% 45%, rgba(${c[2]},0.18) 0%, transparent 80%)`,
+      `radial-gradient(ellipse at 75% 70%, rgba(${c[0]},0.12) 0%, transparent 55%)`,
+      base
+    ].join(', ');
+  },
 
-    this.bgLayer.style.background = gradient;
-    this.bgLayer.style.backgroundSize = '400% 400%';
+  /**
+   * Convert hex to "r,g,b" string for use in rgba()
+   */
+  hexToRgba(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `${r},${g},${b}`;
+  },
 
-    // Apply animation style
-    this.bgLayer.className = 'background-layer';
-    switch (animStyle) {
-      case 'pulse':
-        this.bgLayer.classList.add('anim-pulse');
-        break;
-      case 'wave':
-        this.bgLayer.classList.add('anim-wave');
-        break;
-      default: // shift
-        this.bgLayer.style.animation = `gradientShift ${speed}s ease infinite`;
-    }
+  /**
+   * Derive a dark base color from accent colors
+   */
+  deriveBaseColor(colors) {
+    const rgbs = colors.map(hex => ({
+      r: parseInt(hex.slice(1, 3), 16),
+      g: parseInt(hex.slice(3, 5), 16),
+      b: parseInt(hex.slice(5, 7), 16)
+    }));
+    const avg = {
+      r: rgbs.reduce((s, c) => s + c.r, 0) / rgbs.length,
+      g: rgbs.reduce((s, c) => s + c.g, 0) / rgbs.length,
+      b: rgbs.reduce((s, c) => s + c.b, 0) / rgbs.length
+    };
+    // Blend 8% of the average with near-black for a subtle tint
+    const blend = 0.08;
+    const r = Math.round(avg.r * blend + 10 * (1 - blend));
+    const g = Math.round(avg.g * blend + 10 * (1 - blend));
+    const b = Math.round(avg.b * blend + 10 * (1 - blend));
+    return '#' + [r, g, b].map(v => Math.max(v, 5).toString(16).padStart(2, '0')).join('');
   },
 
   /**
@@ -631,14 +521,9 @@ const AnimatedBackgroundComponent = {
    * Update gradient with current settings
    */
   updateGradient() {
-    // Update config
     this.config.gradient = {
       preset: this.config.gradient?.preset || null,
-      colors: this.getGradientColors(),
-      gradientType: document.querySelector('#bg-gradient-panel .pill[data-type].active')?.dataset.type || 'linear',
-      animationStyle: document.querySelector('#bg-gradient-panel .pill[data-style].active')?.dataset.style || 'shift',
-      direction: '-45deg',
-      speed: parseInt(document.getElementById('gradient-speed')?.value || 15)
+      colors: this.getGradientColors()
     };
 
     if (this.currentType === 'gradient') {
@@ -659,130 +544,38 @@ const AnimatedBackgroundComponent = {
 
     const crossfade = parseInt(document.getElementById('crossfade-duration')?.value || 1500);
     const transition = document.querySelector('#bg-slideshow-panel .pill[data-transition].active')?.dataset.transition || 'fade';
-    const webglTransition = this.config.slideshow?.webglTransition || null;
-    const filter = document.querySelector('#bg-slideshow-panel .pill[data-filter].active')?.dataset.filter || 'none';
-    const kenBurns = document.getElementById('ken-burns-toggle')?.checked || false;
     const shuffle = document.getElementById('shuffle-toggle')?.checked || false;
 
-    this.useWebGL = !!webglTransition && WebGLTransitions.isSupported();
+    // Build play order
+    this.shuffledOrder = [...Array(this.slideshowImages.length).keys()];
+    if (shuffle) this.shuffleArray(this.shuffledOrder);
 
-    // Create shuffled order if needed
-    if (shuffle) {
-      this.shuffledOrder = [...Array(this.slideshowImages.length).keys()];
-      for (let i = this.shuffledOrder.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [this.shuffledOrder[i], this.shuffledOrder[j]] = [this.shuffledOrder[j], this.shuffledOrder[i]];
-      }
-    } else {
-      this.shuffledOrder = [...Array(this.slideshowImages.length).keys()];
-    }
-
-    // If using WebGL transitions
-    if (this.useWebGL) {
-      await this.applyWebGLSlideshow(webglTransition, crossfade, shuffle);
-      return;
-    }
-
-    // Otherwise use CSS transitions
     // Create image elements
     this.slideshowImages.forEach((src, i) => {
       const div = document.createElement('div');
-      const isFirst = (shuffle ? this.shuffledOrder[0] === i : i === 0);
-
       div.className = 'slideshow-image';
-      if (isFirst) div.classList.add('active');
-
-      // Apply filter
-      if (filter !== 'none') {
-        div.classList.add(`filter-${filter}`);
-      }
-
-      // Apply Ken Burns
-      if (kenBurns) {
-        div.classList.add('ken-burns');
-        // Randomize Ken Burns direction
-        const directions = [
-          'translate(0, 0) scale(1)',
-          'translate(-3%, -3%) scale(1.15)',
-          'translate(3%, -3%) scale(1.15)',
-          'translate(-3%, 3%) scale(1.15)',
-          'translate(3%, 3%) scale(1.15)'
-        ];
-        const randomStart = directions[Math.floor(Math.random() * directions.length)];
-        div.style.setProperty('--ken-burns-start', randomStart);
-      }
-
+      if (this.shuffledOrder[0] === i) div.classList.add('active');
       div.style.backgroundImage = `url(${src})`;
-
-      // Set transition based on type
-      if (transition === 'fade') {
-        div.style.transition = `opacity ${crossfade}ms var(--motion-easing-standard)`;
-      }
-
+      div.style.transition = `opacity ${crossfade}ms var(--motion-easing-standard)`;
       div.dataset.index = i;
       this.bgLayer.appendChild(div);
     });
 
-    // Start slideshow timer
-    const interval = (parseInt(document.getElementById('slideshow-speed')?.value || 8)) * 1000;
-
-    this.currentSlideIndex = 0;
-    this.slideshowTimerId = setInterval(() => this.advanceSlide(transition, crossfade), interval);
-  },
-
-  /**
-   * Apply WebGL slideshow
-   */
-  async applyWebGLSlideshow(transitionType, crossfade, shuffle) {
-    // Initialize WebGL if needed
-    if (!WebGLTransitions.init()) {
-      console.warn('WebGL init failed, falling back to CSS');
-      this.useWebGL = false;
-      this.applySlideshow();
-      return;
+    // Start timer if multiple images
+    if (this.slideshowImages.length > 1) {
+      const interval = parseInt(document.getElementById('slideshow-speed')?.value || 8) * 1000;
+      this.currentSlideIndex = 0;
+      this.slideshowTimerId = setInterval(() => this.advanceSlide(transition, crossfade), interval);
     }
-
-    // Set the transition type
-    WebGLTransitions.setTransition(transitionType);
-
-    // Preload all textures
-    await WebGLTransitions.preloadTextures(this.slideshowImages);
-
-    // Get first texture and display it
-    const firstIdx = this.shuffledOrder[0];
-    const firstTexture = await WebGLTransitions.loadTexture(this.slideshowImages[firstIdx]);
-
-    WebGLTransitions.show();
-    WebGLTransitions.displayStatic(firstTexture);
-
-    // Start slideshow timer
-    const interval = (parseInt(document.getElementById('slideshow-speed')?.value || 8)) * 1000;
-
-    this.currentSlideIndex = 0;
-    this.slideshowTimerId = setInterval(() => this.advanceWebGLSlide(transitionType, crossfade), interval);
   },
 
   /**
-   * Advance WebGL slide
+   * Shuffle an array in place (Fisher-Yates)
    */
-  async advanceWebGLSlide(transitionType, crossfade) {
-    if (this.slideshowImages.length < 2) return;
-
-    const currentIdx = this.shuffledOrder[this.currentSlideIndex];
-    const nextSlidePosition = (this.currentSlideIndex + 1) % this.shuffledOrder.length;
-    const nextIdx = this.shuffledOrder[nextSlidePosition];
-
-    try {
-      const currentTexture = await WebGLTransitions.loadTexture(this.slideshowImages[currentIdx]);
-      const nextTexture = await WebGLTransitions.loadTexture(this.slideshowImages[nextIdx]);
-
-      WebGLTransitions.transition(currentTexture, nextTexture, crossfade, () => {
-        // Transition complete
-        this.currentSlideIndex = nextSlidePosition;
-      });
-    } catch (error) {
-      console.error('WebGL transition error:', error);
-      this.currentSlideIndex = nextSlidePosition;
+  shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   },
 
@@ -794,65 +587,60 @@ const AnimatedBackgroundComponent = {
     if (!slides || slides.length < 2) return;
 
     const currentIdx = this.shuffledOrder[this.currentSlideIndex];
-    const nextSlidePosition = (this.currentSlideIndex + 1) % this.shuffledOrder.length;
-    const nextIdx = this.shuffledOrder[nextSlidePosition];
+    let nextSlidePosition = (this.currentSlideIndex + 1) % this.shuffledOrder.length;
 
+    // Reshuffle when looping back to start
+    if (nextSlidePosition === 0 && document.getElementById('shuffle-toggle')?.checked) {
+      this.shuffleArray(this.shuffledOrder);
+    }
+
+    const nextIdx = this.shuffledOrder[nextSlidePosition];
     const currentSlide = slides[currentIdx];
     const nextSlide = slides[nextIdx];
 
-    // Apply transition effect
     switch (transition) {
       case 'slide':
-        currentSlide.classList.add('slide-exit');
-        nextSlide.classList.add('slide-enter');
+        // Position next slide off-screen right
+        nextSlide.style.transition = 'none';
+        nextSlide.style.transform = 'translateX(100%)';
+        nextSlide.style.opacity = '1';
         nextSlide.classList.add('active');
+        void nextSlide.offsetHeight; // force reflow
+        // Animate both
+        nextSlide.style.transition = `transform ${crossfade}ms var(--motion-easing-emphasized)`;
+        currentSlide.style.transition = `transform ${crossfade}ms var(--motion-easing-emphasized)`;
+        nextSlide.style.transform = 'translateX(0)';
+        currentSlide.style.transform = 'translateX(-100%)';
         setTimeout(() => {
-          nextSlide.classList.remove('slide-enter');
-          nextSlide.classList.add('slide-active');
-        }, 50);
-        setTimeout(() => {
-          currentSlide.classList.remove('active', 'slide-exit', 'slide-active');
-          nextSlide.classList.remove('slide-active');
-        }, 600);
+          currentSlide.classList.remove('active');
+          currentSlide.style.transform = '';
+          currentSlide.style.transition = '';
+          currentSlide.style.opacity = '';
+          nextSlide.style.transition = `opacity ${crossfade}ms var(--motion-easing-standard)`;
+          nextSlide.style.transform = '';
+        }, crossfade + 50);
         break;
 
       case 'zoom':
-        nextSlide.classList.add('zoom-enter');
+        nextSlide.style.transition = 'none';
+        nextSlide.style.transform = 'scale(0.85)';
+        nextSlide.style.opacity = '0';
         nextSlide.classList.add('active');
+        void nextSlide.offsetHeight;
+        nextSlide.style.transition = `transform ${crossfade}ms var(--motion-easing-emphasized), opacity ${Math.round(crossfade * 0.6)}ms ease`;
+        nextSlide.style.transform = 'scale(1)';
+        nextSlide.style.opacity = '1';
         setTimeout(() => {
-          nextSlide.classList.remove('zoom-enter');
-          nextSlide.classList.add('zoom-active');
           currentSlide.classList.remove('active');
-        }, 50);
-        setTimeout(() => {
-          nextSlide.classList.remove('zoom-active');
-        }, 800);
-        break;
-
-      case 'blur':
-        nextSlide.classList.add('blur-enter');
-        nextSlide.classList.add('active');
-        setTimeout(() => {
-          nextSlide.classList.remove('blur-enter');
-          nextSlide.classList.add('blur-active');
-          currentSlide.classList.remove('active');
-        }, 50);
-        setTimeout(() => {
-          nextSlide.classList.remove('blur-active');
-        }, 800);
+          currentSlide.style.opacity = '';
+          nextSlide.style.transition = `opacity ${crossfade}ms var(--motion-easing-standard)`;
+          nextSlide.style.transform = '';
+        }, crossfade + 50);
         break;
 
       default: // fade
         currentSlide.classList.remove('active');
         nextSlide.classList.add('active');
-    }
-
-    // Reset Ken Burns on next slide
-    const kenBurns = document.getElementById('ken-burns-toggle')?.checked || false;
-    if (kenBurns) {
-      nextSlide.style.animation = 'none';
-      void nextSlide.offsetHeight;
-      nextSlide.style.animation = '';
     }
 
     this.currentSlideIndex = nextSlidePosition;
@@ -895,11 +683,6 @@ const AnimatedBackgroundComponent = {
     await this.saveImages();
     this.saveConfig();
 
-    // Update preview with new images
-    if (this.previewInitialized) {
-      this.updatePreviewImages();
-    }
-
     // Clear the input so the same file can be selected again
     const uploadInput = document.getElementById('image-upload');
     if (uploadInput) uploadInput.value = '';
@@ -913,7 +696,6 @@ const AnimatedBackgroundComponent = {
     const url = input?.value?.trim();
     if (!url) return;
 
-    // Add the URL to images
     this.slideshowImages.push(url);
     this.renderGallery();
 
@@ -925,12 +707,6 @@ const AnimatedBackgroundComponent = {
     await this.saveImages();
     this.saveConfig();
 
-    // Update preview with new images
-    if (this.previewInitialized) {
-      this.updatePreviewImages();
-    }
-
-    // Clear input
     if (input) input.value = '';
   },
 
@@ -951,11 +727,6 @@ const AnimatedBackgroundComponent = {
 
     await this.saveImages();
     this.saveConfig();
-
-    // Update preview with remaining images
-    if (this.previewInitialized) {
-      this.updatePreviewImages();
-    }
   },
 
   /**
@@ -965,11 +736,9 @@ const AnimatedBackgroundComponent = {
     const gallery = document.getElementById('slideshow-gallery');
     if (!gallery) return;
 
-    // Clear existing (except add button)
     gallery.querySelectorAll('.gallery-image').forEach(el => el.remove());
 
-    // Add images before the add-image-card
-    const addBtn = gallery.querySelector('.add-image-card');
+    const addBtn = gallery.querySelector('.upload-btn');
     this.slideshowImages.forEach((src, i) => {
       const div = document.createElement('div');
       div.className = 'gallery-image';
@@ -993,21 +762,12 @@ const AnimatedBackgroundComponent = {
    * Update slideshow settings
    */
   updateSlideshow() {
-    // Get active WebGL transition (if any)
-    const activeWebGL = document.querySelector('#bg-slideshow-panel .webgl-chip.active');
-    const webglTransition = activeWebGL ? activeWebGL.dataset.webgl : null;
-
     this.config.slideshow = {
       speed: parseInt(document.getElementById('slideshow-speed')?.value || 8),
       crossfade: parseInt(document.getElementById('crossfade-duration')?.value || 1500),
       transition: document.querySelector('#bg-slideshow-panel .pill[data-transition].active')?.dataset.transition || 'fade',
-      webglTransition: webglTransition,
-      kenBurns: document.getElementById('ken-burns-toggle')?.checked || false,
-      filter: document.querySelector('#bg-slideshow-panel .pill[data-filter].active')?.dataset.filter || 'none',
       shuffle: document.getElementById('shuffle-toggle')?.checked || false
     };
-
-    this.useWebGL = !!webglTransition;
 
     if (this.currentType === 'slideshow' && this.slideshowImages.length > 0) {
       this.stopAllAnimations();
@@ -1360,24 +1120,6 @@ const AnimatedBackgroundComponent = {
       document.querySelectorAll('#bg-gradient-panel .color-pickers .color-picker-input').forEach((picker, i) => {
         if (colors[i]) picker.value = colors[i];
       });
-
-      // Gradient type
-      const typeBtn = document.querySelector(`#bg-gradient-panel .pill[data-type="${this.config.gradient.gradientType}"]`);
-      if (typeBtn) {
-        typeBtn.closest('.pill-group')?.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        typeBtn.classList.add('active');
-      }
-
-      // Animation style
-      const animBtn = document.querySelector(`#bg-gradient-panel .pill[data-style="${this.config.gradient.animationStyle}"]`);
-      if (animBtn) {
-        animBtn.closest('.pill-group')?.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        animBtn.classList.add('active');
-      }
-
-      // Speed
-      const speedSlider = document.getElementById('gradient-speed');
-      if (speedSlider) speedSlider.value = this.config.gradient.speed || 15;
     }
 
     // Restore slideshow settings
@@ -1394,36 +1136,12 @@ const AnimatedBackgroundComponent = {
         this.updateSliderValue('crossfade-duration');
       }
 
-      // Transition (CSS or WebGL)
-      if (this.config.slideshow.webglTransition) {
-        // WebGL transition - deselect CSS transitions and select WebGL button
-        document.querySelectorAll('#bg-slideshow-panel .pill[data-transition]').forEach(b => b.classList.remove('active'));
-        const webglBtn = document.querySelector(`#bg-slideshow-panel .webgl-chip[data-webgl="${this.config.slideshow.webglTransition}"]`);
-        if (webglBtn) {
-          document.querySelectorAll('#bg-slideshow-panel .webgl-chip').forEach(b => b.classList.remove('active'));
-          webglBtn.classList.add('active');
-        }
-        this.useWebGL = true;
-      } else {
-        // CSS transition
-        const transBtn = document.querySelector(`#bg-slideshow-panel .pill[data-transition="${this.config.slideshow.transition}"]`);
-        if (transBtn) {
-          transBtn.closest('.pill-group')?.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-          transBtn.classList.add('active');
-        }
-        this.useWebGL = false;
+      // Transition
+      const transBtn = document.querySelector(`#bg-slideshow-panel .pill[data-transition="${this.config.slideshow.transition}"]`);
+      if (transBtn) {
+        transBtn.closest('.pill-group')?.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+        transBtn.classList.add('active');
       }
-
-      // Filter
-      const filterBtn = document.querySelector(`#bg-slideshow-panel .pill[data-filter="${this.config.slideshow.filter}"]`);
-      if (filterBtn) {
-        filterBtn.closest('.pill-group')?.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-        filterBtn.classList.add('active');
-      }
-
-      // Ken Burns
-      const kenBurnsToggle = document.getElementById('ken-burns-toggle');
-      if (kenBurnsToggle) kenBurnsToggle.checked = this.config.slideshow.kenBurns || false;
 
       // Shuffle
       const shuffleToggle = document.getElementById('shuffle-toggle');

@@ -421,16 +421,14 @@ body.search-expanded .content-grid {
   min-width: 72px;
   opacity: 0;
   transform: scale(0.5) translateY(12px);
-  transition: background var(--motion-duration-short) var(--motion-easing-standard),
-              transform 80ms var(--motion-easing-snap),
+  transition: transform 80ms var(--motion-easing-snap),
               opacity 60ms var(--motion-easing-snap);
 }
 
 .search-container.expanded .quick-link {
   opacity: 1;
   transform: scale(1) translateY(0);
-  transition: background var(--motion-duration-short) var(--motion-easing-standard),
-              transform 350ms cubic-bezier(0.34, 1.8, 0.64, 1),
+  transition: transform 350ms cubic-bezier(0.34, 1.8, 0.64, 1),
               opacity 200ms var(--motion-easing-standard);
 }
 
@@ -446,7 +444,8 @@ body.search-expanded .content-grid {
 }
 
 .quick-link:active {
-  transform: scale(0.92);
+  transform: scale(0.95);
+  transition: transform 80ms ease-out;
 }
 
 .quick-link-icon {
@@ -456,7 +455,7 @@ body.search-expanded .content-grid {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--motion-duration-medium) var(--motion-easing-bounce);
+  transition: transform 200ms ease-out;
 }
 
 .quick-link:hover .quick-link-icon {
@@ -473,7 +472,7 @@ body.search-expanded .content-grid {
   font-size: 11px;
   font-weight: 500;
   color: var(--on-surface-variant);
-  transition: color var(--motion-duration-short) var(--motion-easing-standard);
+  transition: color 150ms ease;
 }
 
 .quick-link:hover span {
@@ -1219,9 +1218,9 @@ body.search-expanded .content-grid {
 .gradient-preset {
   aspect-ratio: 16/10;
   border-radius: var(--radius-sm);
-  border: 2px solid transparent;
+  border: none;
   cursor: pointer;
-  transition: transform 150ms ease, border-color 150ms ease;
+  transition: transform 150ms ease;
 }
 
 .gradient-preset:hover {
@@ -1229,7 +1228,7 @@ body.search-expanded .content-grid {
 }
 
 .gradient-preset.active {
-  border-color: var(--on-surface);
+  box-shadow: 0 0 0 2px var(--on-surface);
 }
 
 /* Option Groups */
@@ -1289,7 +1288,10 @@ body.search-expanded .content-grid {
 }
 
 .pill {
-  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
   font-size: 12px;
   font-weight: 500;
   font-family: inherit;
@@ -1299,6 +1301,13 @@ body.search-expanded .content-grid {
   cursor: pointer;
   color: var(--on-surface-variant);
   transition: all 150ms ease;
+  white-space: nowrap;
+}
+
+.pill svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .pill:hover {
@@ -1340,6 +1349,8 @@ body.search-expanded .content-grid {
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 12px;
+  max-height: 168px;
+  overflow-y: auto;
 }
 
 .upload-btn {
@@ -1348,13 +1359,14 @@ body.search-expanded .content-grid {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
   background: var(--surface-container);
+  border: 1px dashed var(--outline-variant);
   border-radius: var(--radius-sm);
   cursor: pointer;
   color: var(--on-surface-variant);
-  font-size: 11px;
+  font-size: 10px;
   transition: background 150ms ease;
 }
 
@@ -1414,98 +1426,6 @@ body.search-expanded .content-grid {
 .add-btn svg {
   width: 18px;
   height: 18px;
-}
-
-/* WebGL Section */
-.webgl-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.webgl-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-
-.webgl-chip {
-  padding: 8px 4px;
-  font-size: 10px;
-  font-weight: 500;
-  font-family: inherit;
-  background: var(--surface-container);
-  border: none;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  color: var(--on-surface-variant);
-  transition: all 150ms ease;
-}
-
-.webgl-chip:hover {
-  background: var(--surface-container-high);
-}
-
-.webgl-chip.active {
-  background: var(--primary);
-  color: var(--on-primary);
-}
-
-/* Transition Preview */
-.transition-preview {
-  position: relative;
-  aspect-ratio: 16/9;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: var(--surface-container);
-  margin-top: 12px;
-}
-
-#preview-canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.preview-controls {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-}
-
-#preview-transition-name {
-  font-size: 11px;
-  color: white;
-  opacity: 0.8;
-}
-
-.preview-play {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.2);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  color: white;
-  transition: background 150ms ease;
-}
-
-.preview-play:hover {
-  background: rgba(255,255,255,0.3);
-}
-
-.preview-play svg {
-  width: 14px;
-  height: 14px;
 }
 
 /* Toggle Row Compact */
@@ -1639,10 +1559,6 @@ body.search-expanded .content-grid {
 }
 
 /* Hide WebGL if not supported */
-body:not(.webgl-supported) .webgl-section,
-body:not(.webgl-supported) .transition-preview {
-  display: none;
-}
 
 @keyframes content-reveal {
   from {
@@ -2067,18 +1983,6 @@ body:not(.webgl-supported) .transition-preview {
   background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
 }
 
-/* Animated Gradient */
-.bg-animated {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
 
 /* ============================================
    ANIMATED BACKGROUND CUSTOMIZER
@@ -2344,78 +2248,6 @@ body:not(.webgl-supported) .transition-preview {
   flex-wrap: wrap;
 }
 
-.gallery-image {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-
-.gallery-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gallery-image .remove-btn {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 20px;
-  height: 20px;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  border-radius: var(--radius-full);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity var(--motion-duration-short) var(--motion-easing-standard),
-              transform var(--motion-duration-short) var(--motion-easing-bounce),
-              background var(--motion-duration-short) var(--motion-easing-standard);
-}
-
-.gallery-image .remove-btn svg {
-  width: 12px;
-  height: 12px;
-}
-
-.gallery-image:hover .remove-btn {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.gallery-image .remove-btn:hover {
-  background: #f44336;
-}
-
-.add-image-btn {
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface-container-high);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--on-surface-variant);
-  transition: background var(--motion-duration-short) var(--motion-easing-standard),
-              transform var(--motion-duration-medium) var(--motion-easing-bounce);
-}
-
-.add-image-btn svg {
-  width: 24px;
-  height: 24px;
-}
-
-.add-image-btn:hover {
-  background: var(--surface-container-highest);
-  transform: scale(1.05);
-}
 
 /* Image Source Tabs */
 .image-source-tabs {
@@ -2646,82 +2478,6 @@ body:not(.webgl-supported) .transition-preview {
   color: var(--on-primary);
 }
 
-/* Hide WebGL options if not supported */
-body:not(.webgl-supported) .webgl-header,
-body:not(.webgl-supported) .webgl-transitions-grid,
-body:not(.webgl-supported) .transition-preview {
-  display: none;
-}
-
-/* Transition Preview */
-.transition-preview {
-  margin-top: var(--space-md);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--surface-container-lowest);
-}
-
-.preview-container {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-}
-
-#preview-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.preview-label {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-sm) var(--space-md);
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-  color: white;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-#preview-transition-name {
-  opacity: 0.9;
-  text-transform: capitalize;
-}
-
-.preview-play-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  transition: background var(--motion-duration-short) var(--motion-easing-standard),
-              transform var(--motion-duration-medium) var(--motion-easing-bounce);
-}
-
-.preview-play-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.preview-play-btn:hover {
-  background: rgba(255,255,255,0.25);
-  transform: scale(1.1);
-}
-
-.preview-play-btn:active {
-  transform: scale(0.95);
-}
 
 /* Slideshow Images */
 .slideshow-image {
@@ -3442,104 +3198,7 @@ body:not(.webgl-supported) .transition-preview {
 .type-options-panel:not(.hidden) .option-card:nth-child(3) { animation-delay: 150ms; }
 .type-options-panel:not(.hidden) .option-card:nth-child(4) { animation-delay: 200ms; }
 
-/* Ken Burns Animation */
-@keyframes kenBurns {
-  0% {
-    transform: scale(1) translate(0, 0);
-  }
-  100% {
-    transform: scale(1.15) translate(-3%, -3%);
-  }
-}
 
-.slideshow-image.ken-burns {
-  animation: kenBurns 12s ease-out forwards;
-}
-
-/* Slideshow Transition Variants */
-.slideshow-image.slide-enter {
-  transform: translateX(100%);
-  opacity: 1;
-}
-
-.slideshow-image.slide-active {
-  transform: translateX(0);
-  transition: transform 0.6s var(--motion-easing-emphasized);
-}
-
-.slideshow-image.slide-exit {
-  transform: translateX(-100%);
-  transition: transform 0.6s var(--motion-easing-emphasized);
-}
-
-.slideshow-image.zoom-enter {
-  transform: scale(0.8);
-  opacity: 0;
-}
-
-.slideshow-image.zoom-active {
-  transform: scale(1);
-  opacity: 1;
-  transition: transform 0.8s var(--motion-easing-emphasized),
-              opacity 0.5s ease;
-}
-
-.slideshow-image.blur-enter {
-  filter: blur(20px);
-  opacity: 0;
-}
-
-.slideshow-image.blur-active {
-  filter: blur(0);
-  opacity: 1;
-  transition: filter 0.8s ease,
-              opacity 0.5s ease;
-}
-
-/* Image Filters for Slideshow */
-.slideshow-image.filter-blur {
-  filter: blur(3px);
-}
-
-.slideshow-image.filter-darken::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.slideshow-image.filter-grayscale {
-  filter: grayscale(100%);
-}
-
-/* Gradient Animation Variants */
-@keyframes gradientPulse {
-  0%, 100% {
-    opacity: 0.7;
-    filter: brightness(1);
-  }
-  50% {
-    opacity: 1;
-    filter: brightness(1.15);
-  }
-}
-
-@keyframes gradientWave {
-  0% { background-position: 0% 50%; }
-  25% { background-position: 50% 100%; }
-  50% { background-position: 100% 50%; }
-  75% { background-position: 50% 0%; }
-  100% { background-position: 0% 50%; }
-}
-
-#background-layer.anim-pulse {
-  animation: gradientPulse 4s ease-in-out infinite;
-}
-
-#background-layer.anim-wave {
-  background-size: 200% 200%;
-  animation: gradientWave 8s ease infinite;
-}
 
 /* ============================================
    ENTRANCE ANIMATIONS
@@ -3693,24 +3352,39 @@ body:not(.webgl-supported) .transition-preview {
   justify-content: center;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
   opacity: 0;
-  transition: opacity var(--motion-duration-medium) var(--motion-easing-standard);
+  transition: opacity 200ms ease-out;
 }
 
 .youtube-card:hover .youtube-play {
   opacity: 1;
 }
 
-.youtube-play svg {
+.youtube-play-btn {
   width: 56px;
   height: 56px;
-  color: white;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
-  transform: scale(0.8);
-  transition: transform var(--motion-duration-medium) var(--motion-easing-bounce);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  transform: scale(0.85);
+  opacity: 0;
+  transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 200ms ease-out,
+              background 150ms ease;
 }
 
-.youtube-card:hover .youtube-play svg {
+.youtube-card:hover .youtube-play-btn {
   transform: scale(1);
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.youtube-play-btn svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+  margin-left: 3px;
 }
 
 .youtube-badge {

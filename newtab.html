@@ -332,45 +332,24 @@
             <!-- Gradient Panel -->
             <div id="bg-gradient-panel" class="bg-panel">
               <div class="preset-grid">
-                <button class="gradient-preset active" data-preset="aurora" style="background: linear-gradient(135deg, #00d4ff, #090979, #020024)"></button>
-                <button class="gradient-preset" data-preset="sunset" style="background: linear-gradient(135deg, #ff6b6b, #feca57, #ff9ff3)"></button>
-                <button class="gradient-preset" data-preset="ocean" style="background: linear-gradient(135deg, #0077b6, #00b4d8, #90e0ef)"></button>
-                <button class="gradient-preset" data-preset="neon" style="background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00)"></button>
-                <button class="gradient-preset" data-preset="forest" style="background: linear-gradient(135deg, #2d5016, #4a7c23, #228b22)"></button>
-                <button class="gradient-preset" data-preset="midnight" style="background: linear-gradient(135deg, #0c1445, #1a1a2e, #0f3460)"></button>
+                <button class="gradient-preset active" data-preset="aurora" style="background: radial-gradient(ellipse at 35% 65%, rgba(0,212,255,0.6) 0%, transparent 70%), radial-gradient(ellipse at 65% 35%, rgba(124,58,237,0.5) 0%, transparent 70%), #080b1a"></button>
+                <button class="gradient-preset" data-preset="sunset" style="background: radial-gradient(ellipse at 35% 65%, rgba(244,63,94,0.6) 0%, transparent 70%), radial-gradient(ellipse at 65% 35%, rgba(245,158,11,0.5) 0%, transparent 70%), #1a0c0a"></button>
+                <button class="gradient-preset" data-preset="ocean" style="background: radial-gradient(ellipse at 35% 65%, rgba(0,119,182,0.6) 0%, transparent 70%), radial-gradient(ellipse at 65% 35%, rgba(0,180,216,0.5) 0%, transparent 70%), #080d14"></button>
+                <button class="gradient-preset" data-preset="neon" style="background: radial-gradient(ellipse at 35% 65%, rgba(139,92,246,0.6) 0%, transparent 70%), radial-gradient(ellipse at 65% 35%, rgba(236,72,153,0.5) 0%, transparent 70%), #0f0a1a"></button>
+                <button class="gradient-preset" data-preset="forest" style="background: radial-gradient(ellipse at 35% 65%, rgba(16,185,129,0.6) 0%, transparent 70%), radial-gradient(ellipse at 65% 35%, rgba(5,150,105,0.5) 0%, transparent 70%), #081410"></button>
+                <button class="gradient-preset" data-preset="midnight" style="background: radial-gradient(ellipse at 35% 65%, rgba(59,130,246,0.6) 0%, transparent 70%), radial-gradient(ellipse at 65% 35%, rgba(99,102,241,0.5) 0%, transparent 70%), #08081a"></button>
               </div>
               <div class="option-group">
                 <span class="option-label">Custom colors</span>
                 <div class="color-pickers">
-                  <input type="color" class="color-picker-input" data-index="0" value="#ee7752">
-                  <input type="color" class="color-picker-input" data-index="1" value="#e73c7e">
-                  <input type="color" class="color-picker-input" data-index="2" value="#23a6d5">
-                  <input type="color" class="color-picker-input" data-index="3" value="#23d5ab">
+                  <input type="color" class="color-picker-input" data-index="0" value="#00d4ff">
+                  <input type="color" class="color-picker-input" data-index="1" value="#7c3aed">
+                  <input type="color" class="color-picker-input" data-index="2" value="#0ea5e9">
                 </div>
-              </div>
-              <div class="option-group">
-                <span class="option-label">Style</span>
-                <div class="pill-group">
-                  <button class="pill active" data-type="linear">Linear</button>
-                  <button class="pill" data-type="radial">Radial</button>
-                  <button class="pill" data-type="conic">Conic</button>
-                </div>
-              </div>
-              <div class="option-group">
-                <span class="option-label">Animation</span>
-                <div class="pill-group">
-                  <button class="pill active" data-style="shift">Shift</button>
-                  <button class="pill" data-style="pulse">Pulse</button>
-                  <button class="pill" data-style="wave">Wave</button>
-                </div>
-              </div>
-              <div class="option-group">
-                <span class="option-label">Speed</span>
-                <input type="range" id="gradient-speed" class="settings-range" min="5" max="60" value="15">
               </div>
             </div>
 
-            <!-- Slideshow Panel -->
+            <!-- Images Panel -->
             <div id="bg-slideshow-panel" class="bg-panel">
               <div class="upload-area" id="slideshow-gallery">
                 <label class="upload-btn" id="upload-zone">
@@ -378,60 +357,24 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M12 5v14M5 12h14"/>
                   </svg>
-                  <span>Add images</span>
+                  <span>Add</span>
                 </label>
               </div>
               <div class="url-row">
                 <input type="url" id="image-url-input" class="settings-input" placeholder="Paste image URL...">
                 <button id="add-url-btn" class="add-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
                 </button>
               </div>
               <div class="option-group">
                 <span class="option-label">Transition</span>
-                <div class="pill-group" id="css-transitions">
-                  <button class="pill active" data-transition="fade">Fade</button>
-                  <button class="pill" data-transition="slide">Slide</button>
-                  <button class="pill" data-transition="zoom">Zoom</button>
-                  <button class="pill" data-transition="blur">Blur</button>
-                </div>
-              </div>
-              <div class="webgl-section" id="webgl-transitions">
-                <span class="option-label">WebGL effects</span>
-                <div class="webgl-grid">
-                  <button class="webgl-chip" data-webgl="dissolve">Dissolve</button>
-                  <button class="webgl-chip" data-webgl="pixelate">Pixelate</button>
-                  <button class="webgl-chip" data-webgl="ripple">Ripple</button>
-                  <button class="webgl-chip" data-webgl="glitch">Glitch</button>
-                  <button class="webgl-chip" data-webgl="wipe">Wipe</button>
-                  <button class="webgl-chip" data-webgl="morph">Morph</button>
-                  <button class="webgl-chip" data-webgl="swirl">Swirl</button>
-                  <button class="webgl-chip" data-webgl="burn">Burn</button>
-                </div>
-              </div>
-              <div class="transition-preview" id="transition-preview">
-                <canvas id="preview-canvas"></canvas>
-                <div class="preview-controls">
-                  <span id="preview-transition-name">Select effect</span>
-                  <button class="preview-play" id="preview-play-btn">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  </button>
-                </div>
-              </div>
-              <div class="option-group">
-                <span class="option-label">Filter</span>
                 <div class="pill-group">
-                  <button class="pill active" data-filter="none">None</button>
-                  <button class="pill" data-filter="blur">Blur</button>
-                  <button class="pill" data-filter="darken">Darken</button>
+                  <button class="pill active" data-transition="fade"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="8" height="8" rx="1"/><rect x="6" y="4" width="8" height="8" rx="1" opacity="0.4"/></svg>Fade</button>
+                  <button class="pill" data-transition="slide"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="8" height="8" rx="1"/><polyline points="11,8 14,8"/><polyline points="12.5,6.5 14,8 12.5,9.5"/></svg>Slide</button>
+                  <button class="pill" data-transition="zoom"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,2 5,2 5,5"/><polyline points="11,2 14,2 14,5"/><polyline points="2,11 2,14 5,14"/><polyline points="14,11 14,14 11,14"/></svg>Zoom</button>
                 </div>
               </div>
               <div class="toggle-row-compact">
-                <label class="inline-toggle">
-                  <input type="checkbox" id="ken-burns-toggle">
-                  <span class="toggle-track-sm"></span>
-                  <span>Ken Burns</span>
-                </label>
                 <label class="inline-toggle">
                   <input type="checkbox" id="shuffle-toggle">
                   <span class="toggle-track-sm"></span>
@@ -453,9 +396,9 @@
               <div class="option-group">
                 <span class="option-label">Style</span>
                 <div class="pill-group">
-                  <button class="pill active" data-style="dots">Dots</button>
-                  <button class="pill" data-style="lines">Lines</button>
-                  <button class="pill" data-style="network">Network</button>
+                  <button class="pill active" data-style="dots"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="4" cy="5" r="1.5"/><circle cx="10" cy="3" r="1"/><circle cx="12" cy="9" r="1.5"/><circle cx="6" cy="11" r="1"/><circle cx="8" cy="7" r="1.2"/></svg>Dots</button>
+                  <button class="pill" data-style="lines"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="4" x2="7" y2="6"/><line x1="9" y1="3" x2="13" y2="5"/><line x1="4" y1="10" x2="8" y2="12"/><line x1="10" y1="9" x2="13" y2="11"/></svg>Lines</button>
+                  <button class="pill" data-style="network"><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="4" cy="4" r="1.5" stroke="none"/><circle cx="12" cy="4" r="1.5" stroke="none"/><circle cx="8" cy="12" r="1.5" stroke="none"/><line x1="4" y1="4" x2="12" y2="4" fill="none"/><line x1="4" y1="4" x2="8" y2="12" fill="none"/><line x1="12" y1="4" x2="8" y2="12" fill="none"/></svg>Network</button>
                 </div>
               </div>
               <div class="option-group">
@@ -489,9 +432,9 @@
               <div class="option-group">
                 <span class="option-label">Interaction</span>
                 <div class="pill-group">
-                  <button class="pill active" data-interaction="none">None</button>
-                  <button class="pill" data-interaction="attract">Attract</button>
-                  <button class="pill" data-interaction="repel">Repel</button>
+                  <button class="pill active" data-interaction="none"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><line x1="3.5" y1="3.5" x2="12.5" y2="12.5"/></svg>None</button>
+                  <button class="pill" data-interaction="attract"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2,5 5,8 2,11"/><polyline points="14,5 11,8 14,11"/></svg>Attract</button>
+                  <button class="pill" data-interaction="repel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="5,5 2,8 5,11"/><polyline points="11,5 14,8 11,11"/></svg>Repel</button>
                 </div>
               </div>
               <div class="slider-group">
